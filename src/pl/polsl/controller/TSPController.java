@@ -2,10 +2,9 @@ package pl.polsl.controller;
 
 import pl.polsl.model.TSPGraph;
 
-public class Main {
+public class TSPController {
 
-    public static void main(String[] args) {
+    public void run() {
         TSPGraph graph = new TSPGraph("data/qa194.txt");
-
     }
 }

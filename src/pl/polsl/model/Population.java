@@ -17,5 +17,7 @@ public class Population {
         }
     }
 
-    
+    public void sortIndividuals(){
+
+    }
 }
