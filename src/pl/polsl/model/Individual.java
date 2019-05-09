@@ -7,6 +7,8 @@ import java.util.List;
 public class Individual {
     List<Integer> route = new ArrayList<>();
     Double routeLength;
+    private Double fitness;
+    private Double probability;
     TSPGraph graph;
 
     public List<Integer> getSolution() {
@@ -36,5 +38,18 @@ public class Individual {
             routeLength += graph.getDistanceBetweenCities(route.get(i), route.get(i - 1));
         }
         return routeLength;
+    }
+
+    public Double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
+
+    public Double calculateFitness(){
+
+        return 0.0;
     }
 }
