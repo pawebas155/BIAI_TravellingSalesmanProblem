@@ -9,18 +9,38 @@ public class Individual {
     Double routeLength;
     private Double fitness;
     private Double probability;
-    TSPGraph graph;
-
-    public List<Integer> getSolution() {
-        return route;
-    }
-
-    public void setGraph(TSPGraph graph) {
-        this.graph = graph;
-    }
+    private static TSPGraph graph;
 
     public Individual(TSPGraph graph) {
         this.graph = graph;
+    }
+
+    public static TSPGraph getGraph() {
+        return graph;
+    }
+
+    public static void setGraph(TSPGraph tspGraph) {
+        graph = tspGraph;
+    }
+
+    public Double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(Double fitness) {
+        this.fitness = fitness;
+    }
+
+    public Double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Double probability) {
+        this.probability = probability;
+    }
+
+    public List<Integer> getSolution() {
+        return route;
     }
 
     public void createRandomRoute() {
@@ -40,16 +60,8 @@ public class Individual {
         return routeLength;
     }
 
-    public Double getProbability() {
-        return probability;
+    public void calculateFitness(){
+        fitness = 1/calculateRouteLength();
     }
 
-    public void setProbability(Double probability) {
-        this.probability = probability;
-    }
-
-    public Double calculateFitness(){
-
-        return 0.0;
-    }
 }
