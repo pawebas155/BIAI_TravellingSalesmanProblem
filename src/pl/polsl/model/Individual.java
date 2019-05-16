@@ -3,6 +3,7 @@ package pl.polsl.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Individual {
     List<Integer> route = new ArrayList<>();
@@ -64,4 +65,19 @@ public class Individual {
         fitness = 1/calculateRouteLength();
     }
 
+    public void swapTwoRandomCities(){
+        Random random = new Random();
+        int n = random.nextInt(route.size() - 2);
+        n++;
+
+        int k;
+        do{
+            k = random.nextInt(route.size() - 2);
+            k++;
+        }while(k == n);
+
+        Integer tmp = route.get(n);
+        route.set(n, route.get(k));
+        route.set(k, tmp);
+    }
 }
