@@ -56,7 +56,7 @@ public class Population {
     }
 
     // this function can return null if something went wrong
-    public Individual getRandomIndividual(){
+    public Individual getRandomIndividualByProbability(){
 
         Double randomNumber = Math.random();
         for(Individual x : generation){
@@ -65,5 +65,13 @@ public class Population {
             }
         }
         return null;
+    }
+
+    public Individual getIndividualById(int id){
+        return generation.get(id);
+    }
+
+    public int getGenerationSize(){
+        return generation.size();
     }
 }
