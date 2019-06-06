@@ -27,6 +27,10 @@ public class Population {
         }
     }
 
+    public void setGeneration(List<Individual> generation) {
+        this.generation = generation;
+    }
+
     private Comparator<Individual> compareByProbability = (Individual o1, Individual o2) -> o1.getProbability().compareTo(o2.getProbability());
 
     public void sortIndividualsReversed(){
@@ -73,5 +77,15 @@ public class Population {
 
     public int getGenerationSize(){
         return generation.size();
+    }
+
+    public Individual getBestIndividual(){
+        Individual best = generation.get(0);
+        for(Individual tmp : generation){
+            if(tmp.getFitness()>best.getFitness()){
+                best = tmp;
+            }
+        }
+        return best;
     }
 }

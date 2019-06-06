@@ -11,29 +11,37 @@ import java.util.List;
 public class TSPController {
 
     public void run() {
-        TSPGraph graph = new TSPGraph("data/qa194.txt");
-        Individual ind1 = new Individual(graph);
-        Individual ind2 = new Individual(graph);
-        ind1.createRandomRoute();
-        ind2.createRandomRoute();
-        System.out.println(ind1.getSolution().size());
-        System.out.println(ind2.getSolution().size());
-        System.out.println(graph.getNumberOfCities());
+//        TSPGraph graph = new TSPGraph("data/qa194.txt");
+////        Individual ind1 = new Individual(graph);
+////        Individual ind2 = new Individual(graph);
+////        ind1.createRandomRoute();
+////        ind2.createRandomRoute();
+////        System.out.println(ind1.getSolution().size());
+////        System.out.println(ind2.getSolution().size());
+////        System.out.println(graph.getNumberOfCities());
+////
+////        Algorithm algorithm = new Algorithm(graph,null);
+////        Individual child = algorithm.pmxCrossover(ind1, ind2);
+////
+////
+////        for(int i = 0; i<graph.getNumberOfCities();i++){
+////            System.out.print(ind1.getSolution().get(i) + " ");
+////        }
+////        System.out.println();
+////        for(int i = 0; i<graph.getNumberOfCities();i++){
+////            System.out.print(ind2.getSolution().get(i) + " ");
+////        }
+////        System.out.println();
+////        for(int i = 0; i<graph.getNumberOfCities();i++){
+////            System.out.print(child.getSolution().get(i) + " ");
+////        }
 
-        Algorithm algorithm = new Algorithm(graph,null);
-        Individual child = algorithm.pmxCrossover(ind1, ind2);
-
-
-        for(int i = 0; i<graph.getNumberOfCities();i++){
-            System.out.print(ind1.getSolution().get(i) + " ");
-        }
-        System.out.println();
-        for(int i = 0; i<graph.getNumberOfCities();i++){
-            System.out.print(ind2.getSolution().get(i) + " ");
-        }
-        System.out.println();
-        for(int i = 0; i<graph.getNumberOfCities();i++){
-            System.out.print(child.getSolution().get(i) + " ");
-        }
+        TSPGraph graph = new TSPGraph("data/simple.txt");
+        Population population = new Population(100, graph);
+        Algorithm algorithm = new Algorithm(graph, population, 5);
+        algorithm.evolve();
+        algorithm.evolve();
+        algorithm.evolve();
+        algorithm.evolve();
     }
 }

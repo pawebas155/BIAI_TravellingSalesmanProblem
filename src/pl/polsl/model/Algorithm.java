@@ -15,9 +15,10 @@ public class Algorithm {
         percentOfMutation = percOfMutation;
     }
 
-    public Algorithm(TSPGraph graph, Population population){
+    public Algorithm(TSPGraph graph, Population population, int percOfMutation) {
         this.graph = graph;
         this.population = population;
+        this.percentOfMutation = percOfMutation;
     }
 
     public void evaluation() {
@@ -30,7 +31,7 @@ public class Algorithm {
         return population.getRandomIndividualByProbability();
     }
 
-    public Individual pmxCrossover(Individual firstParent, Individual secondParent) {
+    public Individual pmxCrossoverOperator(Individual firstParent, Individual secondParent) {
         //FOR TESTING
 //        Integer[] route1 = {3,0,1,2};
 //        firstParent.setRoute(Arrays.asList(route1));
@@ -62,7 +63,7 @@ public class Algorithm {
             endCity = tmp;
         }
 
-        for(int i = 0; i<graph.getNumberOfCities();i++){
+        for (int i = 0; i < graph.getNumberOfCities(); i++) {
             newRoute.add(-1);
         }
 
@@ -98,8 +99,8 @@ public class Algorithm {
 
 
         //Rest of cities
-        for(int i = 0; i<secondParent.getSolution().size();i++){
-            if(!newRoute.contains(secondParent.getSolution().get(i))){
+        for (int i = 0; i < secondParent.getSolution().size(); i++) {
+            if (!newRoute.contains(secondParent.getSolution().get(i))) {
                 newRoute.set(i, secondParent.getSolution().get(i));
             }
         }
@@ -143,7 +144,25 @@ public class Algorithm {
     }
 
 
-    public void Evolve() {
+    public void evolve() {
+        List<Individual> newGeneration = new ArrayList<>();
+        evaluation();
+
+        while (newGeneration.size() < population.getGenerationSize()) {
+            Individual firstParent = selection();
+            Individual secondParent = selection();
+            while (firstParent == secondParent) {
+                secondParent = selection();
+            }
+
+            Individual child = pmxCrossoverOperator(firstParent, secondParent);
+            newGeneration.add(child);
+        }
+
+        mutation();
+
+        population.setGeneration(newGeneration);
+        System.out.println(population.getBestIndividual().getFitness());
 
     }
 }
