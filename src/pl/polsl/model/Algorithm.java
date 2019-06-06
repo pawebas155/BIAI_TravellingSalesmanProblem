@@ -15,6 +15,11 @@ public class Algorithm {
         percentOfMutation = percOfMutation;
     }
 
+    public Algorithm(TSPGraph graph, Population population){
+        this.graph = graph;
+        this.population = population;
+    }
+
     public void evaluation() {
         population.calculateFitnessForAllIndividuals();
         population.sortIndividualsReversed();
@@ -25,13 +30,90 @@ public class Algorithm {
         return population.getRandomIndividualByProbability();
     }
 
-    public Individual crossover(Individual firstParent, Individual secondParent) {
+    public Individual pmxCrossover(Individual firstParent, Individual secondParent) {
+        //FOR TESTING
+//        Integer[] route1 = {3,0,1,2};
+//        firstParent.setRoute(Arrays.asList(route1));
+//        Integer[] route2 = {2,3,0,1};
+//        secondParent.setRoute(Arrays.asList(route2));
+//
+//        for(int i = 0; i<graph.getNumberOfCities();i++){
+//            System.out.print(firstParent.getSolution().get(i) + " ");
+//        }
+//        System.out.println();
+//        for(int i = 0; i<graph.getNumberOfCities();i++){
+//            System.out.print(secondParent.getSolution().get(i) + " ");
+//        }
+
+
+        Individual child = new Individual(graph);
+        List<Integer> newRoute = new ArrayList<>();
+        Integer startCity = (int) (Math.random() * graph.getNumberOfCities());
+        Integer endCity = (int) (Math.random() * graph.getNumberOfCities());
+
+        while (startCity == endCity) {
+            startCity = (int) (Math.random() * graph.getNumberOfCities());
+            endCity = (int) (Math.random() * graph.getNumberOfCities());
+        }
+
+        if (startCity > endCity) {
+            Integer tmp = startCity;
+            startCity = endCity;
+            endCity = tmp;
+        }
+
+        for(int i = 0; i<graph.getNumberOfCities();i++){
+            newRoute.add(-1);
+        }
+
+        for (int i = startCity; i < endCity + 1; i++) {
+            newRoute.set(i, firstParent.getSolution().get(i));
+        }
+
+        System.out.println("Start City:" + startCity);
+        System.out.println(("End City:" + endCity));
+
+        //Check which cities between startCity and endCity in parent2 are not yet in newRoute
+        List<Integer> missingCities = new ArrayList<>();
+
+        for (int i = startCity; i < endCity + 1; i++) {
+            if (!newRoute.contains(secondParent.getSolution().get(i))) {
+                missingCities.add(secondParent.getSolution().get(i));
+            }
+        }
+
+
+        for (int i = 0; i < missingCities.size(); i++) {
+            int positionOfCityInSecondParent = secondParent.getSolution().indexOf(missingCities.get(i));
+            int cityBlockingPosition = firstParent.getSolution().get(positionOfCityInSecondParent);
+            int position = secondParent.getSolution().indexOf(cityBlockingPosition);
+
+            while (newRoute.get(position) != -1) {
+                cityBlockingPosition = firstParent.getSolution().get(position);
+                position = secondParent.getSolution().indexOf(cityBlockingPosition);
+            }
+            newRoute.set(position, missingCities.get(i));
+
+        }
+
+
+        //Rest of cities
+        for(int i = 0; i<secondParent.getSolution().size();i++){
+            if(!newRoute.contains(secondParent.getSolution().get(i))){
+                newRoute.set(i, secondParent.getSolution().get(i));
+            }
+        }
+
+        child.setRoute(newRoute);
+        return child;
+    }
+
+    public Individual edgeCrossover(Individual firstParent, Individual secondParent) {
         Integer currentNode, nextNode;
         Individual child = new Individual(graph);
         List<List<Integer>> neighbourList = new ArrayList<List<Integer>>();
 
-        for(int i = 0; i< graph.getNumberOfCities(); i++)
-        {
+        for (int i = 0; i < graph.getNumberOfCities(); i++) {
             neighbourList.add(new ArrayList<Integer>());
         }
 

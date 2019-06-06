@@ -20,6 +20,8 @@ public class Individual {
         return graph;
     }
 
+    public void setRoute(List<Integer> route) {this.route = route; }
+
     public static void setGraph(TSPGraph tspGraph) {
         graph = tspGraph;
     }
@@ -50,31 +52,32 @@ public class Individual {
             route.add(i);
         }
         Collections.shuffle(route);
-        route.add(route.get(0));
+        // route.add(route.get(0));
     }
 
     public Double calculateRouteLength() {
         routeLength = 0.0;
-        for (int i = 1; i < route.size(); i++) {
+        for (int i = 1; i < route.size() - 1; i++) {
             routeLength += graph.getDistanceBetweenCities(route.get(i), route.get(i - 1));
         }
+        routeLength += graph.getDistanceBetweenCities(route.get(0), route.get(route.size() - 1));
         return routeLength;
     }
 
-    public void calculateFitness(){
-        fitness = 1/calculateRouteLength();
+    public void calculateFitness() {
+        fitness = 1 / calculateRouteLength();
     }
 
-    public void swapTwoRandomCities(){
+    public void swapTwoRandomCities() {
         Random random = new Random();
         int n = random.nextInt(route.size() - 2);
         n++;
 
         int k;
-        do{
+        do {
             k = random.nextInt(route.size() - 2);
             k++;
-        }while(k == n);
+        } while (k == n);
 
         Integer tmp = route.get(n);
         route.set(n, route.get(k));
