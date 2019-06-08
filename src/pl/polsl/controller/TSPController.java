@@ -36,12 +36,15 @@ public class TSPController {
 ////            System.out.print(child.getSolution().get(i) + " ");
 ////        }
 
-        TSPGraph graph = new TSPGraph("data/simple.txt");
-        Population population = new Population(100, graph);
+        TSPGraph graph = new TSPGraph("data/qa194.txt");
+        Population population = new Population(500, graph);
+        population.calculateFitnessForAllIndividuals();
+        population.calculateProbability();
         Algorithm algorithm = new Algorithm(graph, population, 5);
-        algorithm.evolve();
-        algorithm.evolve();
-        algorithm.evolve();
-        algorithm.evolve();
+        for(int i = 0; i<1000;i++) {
+            algorithm.evolve();
+        }
+
+
     }
 }

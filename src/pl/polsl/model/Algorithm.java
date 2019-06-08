@@ -71,8 +71,8 @@ public class Algorithm {
             newRoute.set(i, firstParent.getSolution().get(i));
         }
 
-        System.out.println("Start City:" + startCity);
-        System.out.println(("End City:" + endCity));
+//        System.out.println("Start City:" + startCity);
+//        System.out.println(("End City:" + endCity));
 
         //Check which cities between startCity and endCity in parent2 are not yet in newRoute
         List<Integer> missingCities = new ArrayList<>();
@@ -132,7 +132,7 @@ public class Algorithm {
 
         for (int i = 0; i < ((percentOfMutation * generationSize) / (100)); i++) {
             int n = random.nextInt(generationSize);
-            if (mutatedElement.add(n) == true) {
+            if (mutatedElement.add(n) == true && population.getBestIndividual() != population.getIndividualById(n)) {
                 population.getIndividualById(n).swapTwoRandomCities();
                 //individual = population.getIndividualById(n);
                 //individual.swapTwoRandomCities();
@@ -147,7 +147,8 @@ public class Algorithm {
     public void evolve() {
         List<Individual> newGeneration = new ArrayList<>();
         evaluation();
-
+        Individual best = population.getBestIndividual();
+        newGeneration.add(best);
         while (newGeneration.size() < population.getGenerationSize()) {
             Individual firstParent = selection();
             Individual secondParent = selection();
@@ -159,10 +160,19 @@ public class Algorithm {
             newGeneration.add(child);
         }
 
+        population.setGeneration(newGeneration);
+        population.calculateFitnessForAllIndividuals();
+        population.calculateProbability();
+        evaluation();
         mutation();
 
-        population.setGeneration(newGeneration);
-        System.out.println(population.getBestIndividual().getFitness());
+//        population.setGeneration(newGeneration);
+//        population.calculateFitnessForAllIndividuals();
+//        population.calculateProbability();
+//        population.sortIndividualsReversed();
+        //evaluation();
+        System.out.println(population.getIndividualById(2).calculateRouteLength());
+        System.out.println(population.getBestIndividual().calculateRouteLength());
 
     }
 }
