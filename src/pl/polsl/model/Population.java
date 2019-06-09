@@ -27,10 +27,10 @@ public class Population {
         }
     }
 
-    private Comparator<Individual> compareByProbability = (Individual o1, Individual o2) -> o1.getProbability().compareTo(o2.getProbability());
+    private Comparator<Individual> compareByFitness = (Individual o1, Individual o2) -> o1.getFitness().compareTo(o2.getFitness());
 
     public void sortIndividualsReversed(){
-        Collections.sort(generation, compareByProbability.reversed());
+        Collections.sort(generation, compareByFitness.reversed());
     }
 
     public void calculateFitnessForAllIndividuals(){
