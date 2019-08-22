@@ -166,11 +166,6 @@ public class Algorithm {
         evaluation();
         mutation();
 
-//        population.setGeneration(newGeneration);
-//        population.calculateFitnessForAllIndividuals();
-//        population.calculateProbability();
-//        population.sortIndividualsReversed();
-        //evaluation();
         System.out.println(population.getIndividualById(2).calculateRouteLength());
         System.out.println(population.getBestIndividual().calculateRouteLength());
 
