@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Individual {
-    List<Integer> route = new ArrayList<>();
-    Double routeLength;
+    private List<Integer> route = new ArrayList<>();
+    private Double routeLength;
     private Double fitness;
     private Double probability;
     private static TSPGraph graph;
@@ -16,8 +16,16 @@ public class Individual {
         this.graph = graph;
     }
 
+    public Individual(Individual model){
+        this.route = model.route;
+    }
+
     public static TSPGraph getGraph() {
         return graph;
+    }
+
+    public List<Integer> getRoute() {
+        return route;
     }
 
     public void setRoute(List<Integer> route) {this.route = route; }

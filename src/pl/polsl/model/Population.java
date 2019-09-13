@@ -27,6 +27,10 @@ public class Population {
         }
     }
 
+    public List<Individual> getGeneration() {
+        return generation;
+    }
+
     public void setGeneration(List<Individual> generation) {
         this.generation = generation;
     }
@@ -53,8 +57,8 @@ public class Population {
 
         Double sumOfProbability = 0.0;
         for(Individual x : generation){
-            x.setProbability( sumOfProbability + x.getFitness() / sumFitness);
-            sumOfProbability += x.getProbability();
+            x.setProbability( sumOfProbability + (x.getFitness() / sumFitness));
+            sumOfProbability += (x.getFitness() / sumFitness);
         }
         generation.get(generation.size() - 1).setProbability(1.0);
     }
@@ -63,11 +67,20 @@ public class Population {
     public Individual getRandomIndividualByProbability(){
 
         Double randomNumber = Math.random();
-        for(Individual x : generation){
-            if(x.getProbability() > randomNumber){
-                return x;
+        if(generation.get(0).getProbability()>randomNumber){
+            return generation.get(0);
+        }
+
+        for(int i = 1; i < generationSize; i++){
+            if(generation.get(i - 1).getProbability() < randomNumber && randomNumber < generation.get(i).getProbability()){
+                return generation.get(i);
             }
         }
+//        for(Individual x : generation){
+//            if(x.getProbability() > randomNumber){
+//                return x;
+//            }
+//        }
         return null;
     }
 

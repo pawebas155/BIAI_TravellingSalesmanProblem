@@ -1,5 +1,6 @@
 package pl.polsl.model;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Algorithm {
@@ -9,6 +10,9 @@ public class Algorithm {
     TSPGraph graph;
     private Population population;
 
+    public void setPercentOfMutation(int percentOfMutation){
+        this.percentOfMutation = percentOfMutation;
+    }
     public Algorithm(int populationSize, String fileName, int percOfMutation) {
         graph = new TSPGraph(fileName);
         population = new Population(populationSize, graph);
@@ -110,37 +114,88 @@ public class Algorithm {
     }
 
     public Individual edgeCrossover(Individual firstParent, Individual secondParent) {
-        Integer currentNode, nextNode;
         Individual child = new Individual(graph);
-        List<List<Integer>> neighbourList = new ArrayList<List<Integer>>();
+        List<Integer> firstRoute = firstParent.getRoute();
+        List<Integer> secondRoute = secondParent.getRoute();
+        List<Integer> resultRoute = new ArrayList<>();
+        List<Integer> citiesToVisit = new ArrayList<>();
+        int numberOfCities = graph.getNumberOfCities();
+        HashMap<Integer, HashSet<Integer>> neighbourList = new HashMap<>();
+        Random random = new Random();
+        Integer currentCity;
 
-        for (int i = 0; i < graph.getNumberOfCities(); i++) {
-            neighbourList.add(new ArrayList<Integer>());
+        for (int i = 0; i < numberOfCities; i++) {
+            HashSet<Integer> neighbours = new HashSet<>();
+            neighbours.addAll(getNeighbours(firstRoute, i));
+            neighbours.addAll(getNeighbours(secondRoute, secondRoute.indexOf(firstRoute.get(i))));
+            neighbourList.put(firstRoute.get(i), neighbours);
+            citiesToVisit.add(i);
         }
 
+        if (random.nextBoolean()) {
+            currentCity = firstRoute.get(0);
+
+        } else {
+            currentCity = secondRoute.get(0);
+        }
+        resultRoute.add(currentCity);
+        deleteCityFromNeighbourList(neighbourList, currentCity);
+        citiesToVisit.remove(currentCity);
+
+        while (resultRoute.size() != numberOfCities) {
+
+
+            if (neighbourList.get(currentCity).size() != 0) {
+                ArrayList<Integer> possibleCities = new ArrayList<>(neighbourList.get(currentCity));
+                currentCity = possibleCities.get(0);
+
+                for(int city : possibleCities){
+                    if(neighbourList.get(city).size() < neighbourList.get(currentCity).size()){
+                        currentCity = city;
+                    }
+                }
+            } else {
+                currentCity = citiesToVisit.get(random.nextInt(citiesToVisit.size()));
+            }
+            resultRoute.add(currentCity);
+            deleteCityFromNeighbourList(neighbourList, currentCity);
+            citiesToVisit.remove(currentCity);
+        }
+
+        child.setRoute(resultRoute);
 
         return child;
-
     }
 
     public void mutation() {
 
         int generationSize = population.getGenerationSize();
         Random random = new Random();
-        Set mutatedElement = new HashSet();
+//        HashSet mutatedElement = new HashSet();
         //Individual individual;
+//        Set<Individual> mutatedElements = new HashSet<>();
+//        mutatedElements.add(population.getBestIndividual());
+        Individual bestIndividual = population.getBestIndividual();
+//        population.getGeneration().remove(bestIndividual);
 
-        for (int i = 0; i < ((percentOfMutation * generationSize) / (100)); i++) {
-            int n = random.nextInt(generationSize);
-            if (mutatedElement.add(n) == true && population.getBestIndividual() != population.getIndividualById(n)) {
-                population.getIndividualById(n).swapTwoRandomCities();
-                //individual = population.getIndividualById(n);
-                //individual.swapTwoRandomCities();
-            } else {
-                i--;
+        for(Individual x: population.getGeneration()){
+            int n = random.nextInt(100);
+            if(n<percentOfMutation && !x.calculateRouteLength().equals(bestIndividual.calculateRouteLength())){
+                x.swapTwoRandomCities();
             }
         }
-        mutatedElement.clear();
+
+//        population.getGeneration().add(bestIndividual);
+//        for (int i = 0; i < generationSize; i++) {
+//
+//            int n = random.nextInt(100);
+//            if (mutatedElements.add(population.getIndividualById(n)) && population.getBestIndividual() != population.getIndividualById(n)) {
+//                population.getIndividualById(n).swapTwoRandomCities();
+//            } else {
+//                i--;
+//            }
+//        }
+//        mutatedElements.clear();
     }
 
 
@@ -149,7 +204,7 @@ public class Algorithm {
         evaluation();
         Individual best = population.getBestIndividual();
         newGeneration.add(best);
-        while (newGeneration.size() < population.getGenerationSize()) {
+        while (newGeneration.size() < population.getGenerationSize()/2) {
             Individual firstParent = selection();
             Individual secondParent = selection();
             while (firstParent == secondParent) {
@@ -157,7 +212,12 @@ public class Algorithm {
             }
 
             Individual child = pmxCrossoverOperator(firstParent, secondParent);
+//            Individual child = edgeCrossover(firstParent, secondParent);
             newGeneration.add(child);
+        }
+
+        while(newGeneration.size() < population.getGenerationSize()){
+            newGeneration.add(new Individual(selection()));
         }
 
         population.setGeneration(newGeneration);
@@ -166,8 +226,41 @@ public class Algorithm {
         evaluation();
         mutation();
 
-        System.out.println(population.getIndividualById(2).calculateRouteLength());
-        System.out.println(population.getBestIndividual().calculateRouteLength());
 
     }
+
+    private HashSet<Integer> getNeighbours(List<Integer> route, int index) {
+        HashSet<Integer> result = new HashSet<>();
+
+        if (index != route.size() - 1 && index != 0) {
+            result.add(route.get(index - 1));
+            result.add(route.get(index + 1));
+            return result;
+        }
+
+        if (index == 0) {
+            result.add(route.get(route.size() - 1));
+            result.add(route.get(index + 1));
+            return result;
+        }
+
+        result.add(route.get(index - 1));
+        result.add(route.get(0));
+        return result;
+    }
+
+    private int getNumberOfNeighbours(HashMap<Integer, HashSet<Integer>> neighbourList, int i){
+        return neighbourList.get(i).size();
+    }
+
+    private void deleteCityFromNeighbourList(HashMap<Integer, HashSet<Integer>> neighbourList, Integer cityNumber) {
+        for (Map.Entry<Integer, HashSet<Integer>> entry : neighbourList.entrySet()) {
+
+            HashSet<Integer> connections = entry.getValue();
+            connections.remove(cityNumber);
+
+        }
+    }
+
+
 }

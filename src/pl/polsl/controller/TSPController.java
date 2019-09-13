@@ -37,14 +37,21 @@ public class TSPController {
 ////        }
 
         TSPGraph graph = new TSPGraph("data/wi29.txt");
-        Population population = new Population(500, graph);
+        Population population = new Population(1000, graph);
         population.calculateFitnessForAllIndividuals();
         population.calculateProbability();
-        Algorithm algorithm = new Algorithm(graph, population, 10);
-        for(int i = 0; i<10000;i++) {
+        Algorithm algorithm = new Algorithm(graph, population, 5);
+        for(int i = 0; i<2000;i++) {
             algorithm.evolve();
+//            System.out.println(population.getIndividualById(2).calculateRouteLength());
+            System.out.println(population.getBestIndividual().calculateRouteLength());
         }
 
+        System.out.println();
+
+        for(int i = 0; i<graph.getNumberOfCities(); i++){
+            System.out.println(population.getBestIndividual().getSolution().get(i)+1);
+        }
 
     }
 }
