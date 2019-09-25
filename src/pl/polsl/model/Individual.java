@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Individual {
-    List<Integer> route = new ArrayList<>();
-    Double routeLength;
+    private List<Integer> route = new ArrayList<>();
+    private Double routeLength;
     private Double fitness;
     private Double probability;
     private static TSPGraph graph;
@@ -16,9 +16,19 @@ public class Individual {
         this.graph = graph;
     }
 
+    public Individual(Individual model){
+        this.route = model.route;
+    }
+
     public static TSPGraph getGraph() {
         return graph;
     }
+
+    public List<Integer> getRoute() {
+        return route;
+    }
+
+    public void setRoute(List<Integer> route) {this.route = route; }
 
     public static void setGraph(TSPGraph tspGraph) {
         graph = tspGraph;
@@ -50,7 +60,7 @@ public class Individual {
             route.add(i);
         }
         Collections.shuffle(route);
-        route.add(route.get(0));
+        // route.add(route.get(0));
     }
 
     public Double calculateRouteLength() {
@@ -58,23 +68,24 @@ public class Individual {
         for (int i = 1; i < route.size(); i++) {
             routeLength += graph.getDistanceBetweenCities(route.get(i), route.get(i - 1));
         }
+        routeLength += graph.getDistanceBetweenCities(route.get(0), route.get(route.size() - 1));
         return routeLength;
     }
 
-    public void calculateFitness(){
-        fitness = 1/calculateRouteLength();
+    public void calculateFitness() {
+        fitness = (Double) 1.0 / (Double) calculateRouteLength();
     }
 
-    public void swapTwoRandomCities(){
+    public void swapTwoRandomCities() {
         Random random = new Random();
         int n = random.nextInt(route.size() - 2);
         n++;
 
         int k;
-        do{
+        do {
             k = random.nextInt(route.size() - 2);
             k++;
-        }while(k == n);
+        } while (k == n);
 
         Integer tmp = route.get(n);
         route.set(n, route.get(k));

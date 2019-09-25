@@ -29,6 +29,17 @@ public class Population {
 
     private Comparator<Individual> compareByFitness = (Individual o1, Individual o2) -> o1.getFitness().compareTo(o2.getFitness());
 
+    public List<Individual> getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(List<Individual> generation) {
+        this.generation = generation;
+    }
+
+    private Comparator<Individual> compareByProbability = (Individual o1, Individual o2) -> o1.getProbability().compareTo(o2.getProbability());
+
+
     public void sortIndividualsReversed(){
         Collections.sort(generation, compareByFitness.reversed());
     }
@@ -40,8 +51,6 @@ public class Population {
     }
 
     public void calculateProbability(){
-
-
         double sumFitness = 0.0;
         for(Individual x : generation){
             sumFitness += x.getFitness();
@@ -49,8 +58,8 @@ public class Population {
 
         Double sumOfProbability = 0.0;
         for(Individual x : generation){
-            x.setProbability( sumOfProbability + x.getFitness() / sumFitness);
-            sumOfProbability += x.getProbability();
+            x.setProbability( sumOfProbability + (x.getFitness() / sumFitness));
+            sumOfProbability += (x.getFitness() / sumFitness);
         }
         generation.get(generation.size() - 1).setProbability(1.0);
     }
@@ -59,9 +68,13 @@ public class Population {
     public Individual getRandomIndividualByProbability(){
 
         Double randomNumber = Math.random();
-        for(Individual x : generation){
-            if(x.getProbability() > randomNumber){
-                return x;
+        if(generation.get(0).getProbability()>randomNumber){
+            return generation.get(0);
+        }
+
+        for(int i = 1; i < generationSize; i++){
+            if(generation.get(i - 1).getProbability() < randomNumber && randomNumber < generation.get(i).getProbability()){
+                return generation.get(i);
             }
         }
         return null;
@@ -73,5 +86,15 @@ public class Population {
 
     public int getGenerationSize(){
         return generation.size();
+    }
+
+    public Individual getBestIndividual(){
+        Individual best = generation.get(0);
+        for(Individual tmp : generation){
+            if(tmp.getFitness()>best.getFitness()){
+                best = tmp;
+            }
+        }
+        return best;
     }
 }
