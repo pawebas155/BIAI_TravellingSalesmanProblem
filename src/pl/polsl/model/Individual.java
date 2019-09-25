@@ -65,7 +65,7 @@ public class Individual {
 
     public Double calculateRouteLength() {
         routeLength = 0.0;
-        for (int i = 1; i < route.size() - 1; i++) {
+        for (int i = 1; i < route.size(); i++) {
             routeLength += graph.getDistanceBetweenCities(route.get(i), route.get(i - 1));
         }
         routeLength += graph.getDistanceBetweenCities(route.get(0), route.get(route.size() - 1));
@@ -73,7 +73,7 @@ public class Individual {
     }
 
     public void calculateFitness() {
-        fitness = 1 / calculateRouteLength();
+        fitness = (Double) 1.0 / (Double) calculateRouteLength();
     }
 
     public void swapTwoRandomCities() {

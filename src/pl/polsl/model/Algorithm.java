@@ -1,6 +1,5 @@
 package pl.polsl.model;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Algorithm {
@@ -10,9 +9,10 @@ public class Algorithm {
     TSPGraph graph;
     private Population population;
 
-    public void setPercentOfMutation(int percentOfMutation){
+    public void setPercentOfMutation(int percentOfMutation) {
         this.percentOfMutation = percentOfMutation;
     }
+
     public Algorithm(int populationSize, String fileName, int percOfMutation) {
         graph = new TSPGraph(fileName);
         population = new Population(populationSize, graph);
@@ -36,21 +36,6 @@ public class Algorithm {
     }
 
     public Individual pmxCrossoverOperator(Individual firstParent, Individual secondParent) {
-        //FOR TESTING
-//        Integer[] route1 = {3,0,1,2};
-//        firstParent.setRoute(Arrays.asList(route1));
-//        Integer[] route2 = {2,3,0,1};
-//        secondParent.setRoute(Arrays.asList(route2));
-//
-//        for(int i = 0; i<graph.getNumberOfCities();i++){
-//            System.out.print(firstParent.getSolution().get(i) + " ");
-//        }
-//        System.out.println();
-//        for(int i = 0; i<graph.getNumberOfCities();i++){
-//            System.out.print(secondParent.getSolution().get(i) + " ");
-//        }
-
-
         Individual child = new Individual(graph);
         List<Integer> newRoute = new ArrayList<>();
         Integer startCity = (int) (Math.random() * graph.getNumberOfCities());
@@ -74,9 +59,6 @@ public class Algorithm {
         for (int i = startCity; i < endCity + 1; i++) {
             newRoute.set(i, firstParent.getSolution().get(i));
         }
-
-//        System.out.println("Start City:" + startCity);
-//        System.out.println(("End City:" + endCity));
 
         //Check which cities between startCity and endCity in parent2 are not yet in newRoute
         List<Integer> missingCities = new ArrayList<>();
@@ -149,8 +131,8 @@ public class Algorithm {
                 ArrayList<Integer> possibleCities = new ArrayList<>(neighbourList.get(currentCity));
                 currentCity = possibleCities.get(0);
 
-                for(int city : possibleCities){
-                    if(neighbourList.get(city).size() < neighbourList.get(currentCity).size()){
+                for (int city : possibleCities) {
+                    if (neighbourList.get(city).size() < neighbourList.get(currentCity).size()) {
                         currentCity = city;
                     }
                 }
@@ -168,34 +150,15 @@ public class Algorithm {
     }
 
     public void mutation() {
-
-        int generationSize = population.getGenerationSize();
         Random random = new Random();
-//        HashSet mutatedElement = new HashSet();
-        //Individual individual;
-//        Set<Individual> mutatedElements = new HashSet<>();
-//        mutatedElements.add(population.getBestIndividual());
         Individual bestIndividual = population.getBestIndividual();
-//        population.getGeneration().remove(bestIndividual);
 
-        for(Individual x: population.getGeneration()){
+        for (Individual x : population.getGeneration()) {
             int n = random.nextInt(100);
-            if(n<percentOfMutation && !x.calculateRouteLength().equals(bestIndividual.calculateRouteLength())){
+            if (n < percentOfMutation && !x.calculateRouteLength().equals(bestIndividual.calculateRouteLength())) {
                 x.swapTwoRandomCities();
             }
         }
-
-//        population.getGeneration().add(bestIndividual);
-//        for (int i = 0; i < generationSize; i++) {
-//
-//            int n = random.nextInt(100);
-//            if (mutatedElements.add(population.getIndividualById(n)) && population.getBestIndividual() != population.getIndividualById(n)) {
-//                population.getIndividualById(n).swapTwoRandomCities();
-//            } else {
-//                i--;
-//            }
-//        }
-//        mutatedElements.clear();
     }
 
 
@@ -204,7 +167,7 @@ public class Algorithm {
         evaluation();
         Individual best = population.getBestIndividual();
         newGeneration.add(best);
-        while (newGeneration.size() < population.getGenerationSize()/2) {
+        while (newGeneration.size() < population.getGenerationSize() / 2) {
             Individual firstParent = selection();
             Individual secondParent = selection();
             while (firstParent == secondParent) {
@@ -216,7 +179,7 @@ public class Algorithm {
             newGeneration.add(child);
         }
 
-        while(newGeneration.size() < population.getGenerationSize()){
+        while (newGeneration.size() < population.getGenerationSize()) {
             newGeneration.add(new Individual(selection()));
         }
 
@@ -249,7 +212,7 @@ public class Algorithm {
         return result;
     }
 
-    private int getNumberOfNeighbours(HashMap<Integer, HashSet<Integer>> neighbourList, int i){
+    private int getNumberOfNeighbours(HashMap<Integer, HashSet<Integer>> neighbourList, int i) {
         return neighbourList.get(i).size();
     }
 

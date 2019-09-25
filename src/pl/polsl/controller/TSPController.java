@@ -5,45 +5,20 @@ import pl.polsl.model.Individual;
 import pl.polsl.model.Population;
 import pl.polsl.model.TSPGraph;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TSPController {
 
-    public void run() {
-//        TSPGraph graph = new TSPGraph("data/qa194.txt");
-////        Individual ind1 = new Individual(graph);
-////        Individual ind2 = new Individual(graph);
-////        ind1.createRandomRoute();
-////        ind2.createRandomRoute();
-////        System.out.println(ind1.getSolution().size());
-////        System.out.println(ind2.getSolution().size());
-////        System.out.println(graph.getNumberOfCities());
-////
-////        Algorithm algorithm = new Algorithm(graph,null);
-////        Individual child = algorithm.pmxCrossover(ind1, ind2);
-////
-////
-////        for(int i = 0; i<graph.getNumberOfCities();i++){
-////            System.out.print(ind1.getSolution().get(i) + " ");
-////        }
-////        System.out.println();
-////        for(int i = 0; i<graph.getNumberOfCities();i++){
-////            System.out.print(ind2.getSolution().get(i) + " ");
-////        }
-////        System.out.println();
-////        for(int i = 0; i<graph.getNumberOfCities();i++){
-////            System.out.print(child.getSolution().get(i) + " ");
-////        }
-
-        TSPGraph graph = new TSPGraph("data/wi29.txt");
+    public void run(String filename) {
+        TSPGraph graph = new TSPGraph(filename);
         Population population = new Population(1000, graph);
         population.calculateFitnessForAllIndividuals();
         population.calculateProbability();
         Algorithm algorithm = new Algorithm(graph, population, 5);
-        for(int i = 0; i<2000;i++) {
+        for(int i = 0; i<5000;i++) {
             algorithm.evolve();
-//            System.out.println(population.getIndividualById(2).calculateRouteLength());
             System.out.println(population.getBestIndividual().calculateRouteLength());
         }
 
@@ -52,6 +27,5 @@ public class TSPController {
         for(int i = 0; i<graph.getNumberOfCities(); i++){
             System.out.println(population.getBestIndividual().getSolution().get(i)+1);
         }
-
     }
 }

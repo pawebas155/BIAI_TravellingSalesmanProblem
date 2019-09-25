@@ -7,6 +7,6 @@ public class TSPMain {
     public static void main(String[] args){
 
         TSPController controller = new TSPController();
-        controller.run();
+        controller.run(args[0]);
     }
 }

@@ -25,7 +25,7 @@ public class TSPGraph {
 
         numberOfCities = extractNumberOfCitiesFromInput(input.get(input.size() - 2));
         distanceArray = new Double[numberOfCities][numberOfCities];
-        float[][] coordinatesArray = extractCoordinates(input);
+        Double[][] coordinatesArray = extractCoordinates(input);
         parseCoordinatesArrayToDistanceArray(coordinatesArray);
     }
 
@@ -62,10 +62,10 @@ public class TSPGraph {
      * Method that extracts coordinates from source file
      *
      * @param input ArrayList<String> filled using loadFile method
-     * @return float[][] with coordinates of each city
+     * @return Double[][] with coordinates of each city
      */
-    private float[][] extractCoordinates(ArrayList<String> input) {
-        float[][] coordinatesArray = new float[numberOfCities][2];
+    private Double[][] extractCoordinates(ArrayList<String> input) {
+        Double[][] coordinatesArray = new Double[numberOfCities][2];
         boolean coordinatesSection = false;
         int coordinatesSectionLineNumber = 0;
 
@@ -73,9 +73,9 @@ public class TSPGraph {
             if (coordinatesSection) {
                 String[] splitLine = input.get(lineNumber).split(" ");
                 coordinatesArray[lineNumber - coordinatesSectionLineNumber - 1][0] =
-                        Float.parseFloat(splitLine[1]);
+                        Double.parseDouble(splitLine[1]);
                 coordinatesArray[lineNumber - coordinatesSectionLineNumber - 1][1] =
-                        Float.parseFloat(splitLine[2]);
+                        Double.parseDouble(splitLine[2]);
             }
 
             if (!coordinatesSection && input.get(lineNumber).equals("NODE_COORD_SECTION")) {
@@ -92,13 +92,13 @@ public class TSPGraph {
      *
      * @param coordinatesArray coordinates of cities
      */
-    private void parseCoordinatesArrayToDistanceArray(float[][] coordinatesArray) {
+    private void parseCoordinatesArrayToDistanceArray(Double[][] coordinatesArray) {
         for (int firstCity = 0; firstCity < numberOfCities; firstCity++) {
             distanceArray[firstCity][firstCity] = 0.0;
 
             for (int secondCity = firstCity + 1; secondCity < numberOfCities; secondCity++) {
-                float xDifference;
-                float yDifference;
+                Double xDifference;
+                Double yDifference;
 
                 xDifference = coordinatesArray[firstCity][0] - coordinatesArray[secondCity][0];
                 yDifference = coordinatesArray[firstCity][1] - coordinatesArray[secondCity][1];

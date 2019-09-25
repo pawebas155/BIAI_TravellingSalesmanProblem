@@ -48,8 +48,6 @@ public class Population {
     }
 
     public void calculateProbability(){
-
-
         double sumFitness = 0.0;
         for(Individual x : generation){
             sumFitness += x.getFitness();
