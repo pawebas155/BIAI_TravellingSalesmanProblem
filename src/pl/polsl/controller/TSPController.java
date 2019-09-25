@@ -14,11 +14,11 @@ public class TSPController {
 
     public void run(String filename) {
         TSPGraph graph = new TSPGraph(filename);
-        Population population = new Population(1000, graph);
+        Population population = new Population(1000, graph);//todo rozmiar populacji
         population.calculateFitnessForAllIndividuals();
         population.calculateProbability();
-        Algorithm algorithm = new Algorithm(graph, population, 5);
-        for(int i = 0; i<5000;i++) {
+        Algorithm algorithm = new Algorithm(graph, population, 5);//todo procent mutacji
+        for(int i = 0; i<5000;i++) {//todo ilosc iteracji
             algorithm.evolve();
             System.out.println(population.getBestIndividual().calculateRouteLength());
         }

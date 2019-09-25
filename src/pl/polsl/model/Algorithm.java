@@ -167,7 +167,7 @@ public class Algorithm {
         evaluation();
         Individual best = population.getBestIndividual();
         newGeneration.add(best);
-        while (newGeneration.size() < population.getGenerationSize() / 2) {
+        while (newGeneration.size() < population.getGenerationSize() * 0.5) {//todo ilosc osobnikow poprzedniej generacji przechadzacych do nastepnej generacji
             Individual firstParent = selection();
             Individual secondParent = selection();
             while (firstParent == secondParent) {
