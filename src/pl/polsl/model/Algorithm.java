@@ -8,6 +8,7 @@ public class Algorithm {
 
     TSPGraph graph;
     private Population population;
+    private Integer surviveIndividualPercentage;
 
     public void setPercentOfMutation(int percentOfMutation) {
         this.percentOfMutation = percentOfMutation;
@@ -17,12 +18,14 @@ public class Algorithm {
         graph = new TSPGraph(fileName);
         population = new Population(populationSize, graph);
         percentOfMutation = percOfMutation;
+
     }
 
-    public Algorithm(TSPGraph graph, Population population, int percOfMutation) {
+    public Algorithm(TSPGraph graph, Population population, int percOfMutation, int surviveIndividualPercentage) {
         this.graph = graph;
         this.population = population;
         this.percentOfMutation = percOfMutation;
+        this.surviveIndividualPercentage = surviveIndividualPercentage;
     }
 
     public void evaluation() {
@@ -167,7 +170,7 @@ public class Algorithm {
         evaluation();
         Individual best = population.getBestIndividual();
         newGeneration.add(best);
-        while (newGeneration.size() < population.getGenerationSize() * 0.5) {//todo ilosc osobnikow poprzedniej generacji przechadzacych do nastepnej generacji
+        while (newGeneration.size() < population.getGenerationSize() * (this.surviveIndividualPercentage / (Double)100.0 )) {//todo ilosc osobnikow poprzedniej generacji przechadzacych do nastepnej generacji
             Individual firstParent = selection();
             Individual secondParent = selection();
             while (firstParent == secondParent) {

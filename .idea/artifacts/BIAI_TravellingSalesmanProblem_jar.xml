@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BIAI_TravellingSalesmanProblem:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BIAI_TravellingSalesmanProblem_jar</output-path>
+    <root id="archive" name="BIAI_TravellingSalesmanProblem.jar">
+      <element id="module-output" name="BIAI_TravellingSalesmanProblem" />
+    </root>
+  </artifact>
+</component>
